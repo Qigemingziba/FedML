@@ -38,4 +38,5 @@ jobs:
       - name: federate_job_in_test_env 
         run: |
           cd python
-          echo "Federate example has been tested successfully!"          
+          bash tests/test_federate/test_federate.sh
+          echo "Federate example has been tested successfully!"
