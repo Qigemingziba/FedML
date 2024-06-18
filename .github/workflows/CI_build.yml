@@ -39,5 +39,4 @@ jobs:
         run: |
           cd python
           echo "Pylint has been run successfully!"
-          # pip install mnn==1.1.6
 
