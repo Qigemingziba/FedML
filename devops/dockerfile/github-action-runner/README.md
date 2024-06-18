@@ -6,7 +6,7 @@
 bash build_batch.sh
 
 ### run
-bash run.sh [YourGitRepo] [YourGitHubRunnerToken]
+bash main.sh [YourGitRepo] [YourGitHubRunnerToken]
 
 For the argument YourGitHubRunnerToken, you may navigate based the following path.
 
