@@ -37,6 +37,7 @@ jobs:
       - name: training_job_in_test_env
         run: |
           cd python
+          python tests/test_train/test_train.py
           echo "Train example has been tested successfully!" 
           # cd examples/federate/quick_start/beehive
-          
+

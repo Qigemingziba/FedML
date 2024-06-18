@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI-serving
+name: CI-deploy
 
 # Controls when the workflow will run
 on:
@@ -16,7 +16,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  serving:
+  deploy:
     runs-on: ${{ matrix.python-version }}
     strategy:
       fail-fast: false
@@ -38,5 +38,5 @@ jobs:
         run: |
           cd python
           echo "Serving example has been tested successfully!" 
-          # python tests/test_launch/test_launch.py
+          python tests/test_deploy/test_deploy.py
           

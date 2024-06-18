@@ -1,8 +1,6 @@
 import os.path
 import time
 import fedml
-from fedml.api.constants import RunStatus
-
 # Login
 fedml.set_env_version("test")
 fedml.set_local_on_premise_platform_port(18080)
@@ -21,10 +19,20 @@ launch_result_dict = {}
 launch_result_status = {}
 
 launch_result = fedml.api.launch_job(yaml_file)
+print("Endpoint id is", launch_result.inner_id)
 
-# launch_result = fedml.api.launch_job_on_cluster(yaml_file, "alex-cluster")
-if launch_result.result_code != 0:
-    raise Exception(f"Failed to launch job. Reason: {launch_result.result_message}")
-
-launch_result_dict[launch_result.run_id] = launch_result
-launch_result_status[launch_result.run_id] = RunStatus.STARTING
+cnt = 0
+while 1:
+    try:
+        r = fedml.api.get_endpoint(endpoint_id=launch_result.inner_id)
+    except Exception as e:
+        raise Exception(f"FAILED to get endpoint:{launch_result.inner_id}. {e}")
+    if r.status == "DEPLOYED":
+        print("Deployment has been successfully!")
+        break 
+    elif r.status == "FAILED":
+        raise Exception("FAILED to deploy.")
+    time.sleep(1)
+    cnt += 1
+    if cnt %3 ==0:
+        print('Deployment status is', r.status)

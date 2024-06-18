@@ -4,14 +4,14 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-
+import fedml
 # Set random seed for reproducibility
 torch.manual_seed(42)
 
 # Define hyperparameters
 batch_size = 64
 learning_rate = 0.001
-num_epochs = 10
+num_epochs = 3
 
 # Prepare dataset and data loaders
 transform = transforms.Compose([
@@ -21,6 +21,9 @@ transform = transforms.Compose([
 
 train_dataset = torchvision.datasets.MNIST(root='./data', train=True, transform=transform, download=True)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+test_dataset = torchvision.datasets.MNIST(root='./data', train=False, transform=transform, download=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 # Define a simple convolutional neural network model
 class SimpleCNN(nn.Module):
@@ -48,9 +51,23 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train the model
-total_step = len(train_loader)
 for epoch in range(num_epochs):
-    for i, (images, labels) in enumerate(train_loader):
+
+    # Evaluate the model on the test set during training
+    model.eval()
+    with torch.no_grad():
+        correct = 0
+        total = 0
+        for images, labels in test_loader:
+            outputs = model(images)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+        acc = 100 * correct / total
+        fedml.mlops.log_metric({"epoch":epoch, "acc": acc})
+
+    model.train()
+    for images, labels in train_loader:
         # Forward pass
         outputs = model(images)
         loss = criterion(outputs, labels)
@@ -60,8 +77,22 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-        if (i+1) % 100 == 0:
-            print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
-                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+# Final evaluation on the test set
+model.eval()
+with torch.no_grad():
+    correct = 0
+    total = 0
+    for images, labels in test_loader:
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
 
-print('Finished Training')
+    acc = 100 * correct / total
+    print('Final Test Accuracy: {:.2f} %'.format(acc))
+    fedml.mlops.log_metric({"epoch":num_epochs, "acc": acc})
+
+fedml.mlops.log_model(f"model-file@test", "./simple_cnn.pth")
+# # Save the model parameters
+# torch.save(model.state_dict(), 'simple_cnn.pth')
+# print('Model saved to simple_cnn.pth')
