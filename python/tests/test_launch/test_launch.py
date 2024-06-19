@@ -3,10 +3,10 @@ import time
 import fedml
 from fedml.api.constants import RunStatus
 
-api_key = os.environ.get('API_KEY')
 # Login
+fedml.set_env_version("test")
 fedml.set_local_on_premise_platform_port(18080)
-error_code, error_msg = fedml.api.fedml_login(api_key=api_key)
+error_code, error_msg = fedml.api.fedml_login(api_key="")
 if error_code != 0:
     raise Exception("API Key is invalid!")
 
