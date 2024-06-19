@@ -2,9 +2,10 @@ import os.path
 import time
 import fedml
 # Login
+API_KEY = os.getenv("API_KEY")
 fedml.set_env_version("test")
 fedml.set_local_on_premise_platform_port(18080)
-error_code, error_msg = fedml.api.fedml_login(api_key="")
+error_code, error_msg = fedml.api.fedml_login(api_key=API_KEY)
 if error_code != 0:
     raise Exception("API Key is invalid!")
 
