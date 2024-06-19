@@ -35,6 +35,12 @@ jobs:
           cd python
           pip install -e ./
 
+      - name: login
+        run: | 
+          fedml logout
+          echo $API_KEY
+          fedml login $API_KEY
+
       - name: pylint
         run: |
           cd python

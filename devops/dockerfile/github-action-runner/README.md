@@ -20,6 +20,6 @@ set YourGitHubRunnerToken to value of --token
 ## Example
 Use the following commands to run 4 runners in the FedML-AI/FedML repo:
 
-bash main.sh FedML-AI/FedML AXRYPLZLZN6XVJB3BAIXSP3EMFC7U
+bash main.sh FedML-AI/FedML AXRYPLZLZN6XVJB3BAIXSP3EMFC7U api_key
 
-bash main.sh Qigemingziba/FedML AGMK3PYAURK7QSRM475HF6LGN7L6A
+bash main.sh Qigemingziba/FedML AGMK3PYAURK7QSRM475HF6LGN7L6A xxx
