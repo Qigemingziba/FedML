@@ -33,6 +33,11 @@ jobs:
         run: |
           cd python
           pip install -e ./
+      
+      - name: login
+        run: | 
+          fedml logout
+          fedml login $API_KEY
 
       - name: training_job_in_test_env
         run: |

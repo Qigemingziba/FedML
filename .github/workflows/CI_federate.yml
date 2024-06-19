@@ -34,6 +34,11 @@ jobs:
         run: |
           cd python
           pip install -e ./
+          
+      - name: login
+        run: | 
+          fedml logout
+          fedml login $API_KEY
 
       - name: federate_job_in_test_env 
         run: |

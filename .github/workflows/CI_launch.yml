@@ -35,8 +35,12 @@ jobs:
         run: |
           cd python
           pip install -e ./
-      # - name: fedml login
-      #   run: | 
+      
+      - name: login
+        run: | 
+          fedml logout
+          fedml login $API_KEY
+
       - name: launch_job_in_test_env
         run: |
           cd python
